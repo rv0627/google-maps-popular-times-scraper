@@ -1,0 +1,10 @@
+# Ignore virtual environment
+venv/
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+# Ignore generated data files (optional, remove if you want to upload them)
+popular_times.json
+popular_times.xlsx
+# Ignore VS Code settings
+.vscode/
