@@ -267,14 +267,31 @@ def main():
 
     if flattened_data:
         df = pd.DataFrame(flattened_data)
+        
+        # Save aggregate
         try:
             df.to_excel("popular_times.xlsx", index=False)
-            logging.info("Saved to popular_times.xlsx")
+            logging.info("Saved aggregate data to popular_times.xlsx")
         except Exception as e:
-            logging.error(f"Could not save Excel: {e}")
-            logging.info("Saving as CSV instead...")
-            df.to_csv("popular_times.csv", index=False)
-            logging.info("Saved to popular_times.csv")
+            logging.error(f"Could not save aggregate Excel: {e}")
+
+        # Save individual files per query
+        unique_queries = df["Query"].unique()
+        for query in unique_queries:
+            if not query:
+                continue
+            
+            # Sanitize filename
+            safe_name = re.sub(r'[\\/*?:"<>|]', "_", str(query))
+            filename = f"{safe_name}.xlsx"
+            
+            query_df = df[df["Query"] == query]
+            try:
+                query_df.to_excel(filename, index=False)
+                logging.info(f"Saved {len(query_df)} rows to {filename}")
+            except Exception as e:
+                logging.error(f"Could not save {filename}: {e}")
+            
     else:
         logging.info("No data to export.")
 
